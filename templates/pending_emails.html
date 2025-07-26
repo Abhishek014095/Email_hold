@@ -3,37 +3,15 @@
 <head>
     <title>Held Emails</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 30px;
-        }
-
-        h2 {
-            text-align: center;
-            color: #333;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 25px;
-        }
-
-        th, td {
-            border: 1px solid #ccc;
-            padding: 12px;
-            text-align: left;
-            vertical-align: top;
-            word-wrap: break-word;
-        }
-
-        th {
-            background-color: #f2f2f2;
-        }
-
-        td {
-            background-color: #fff;
-        }
+        body { font-family: Arial, sans-serif; margin: 30px; }
+        h2 { text-align: center; color: #333; }
+        table { width: 100%; border-collapse: collapse; margin-top: 25px; }
+        th, td { border: 1px solid #ccc; padding: 12px; text-align: left; vertical-align: top; word-wrap: break-word; }
+        th { background-color: #f2f2f2; }
+        td { background-color: #fff; }
+        .actions form { display: inline; }
+        .approve { background-color: #4CAF50; color: white; padding: 6px 10px; border: none; cursor: pointer; }
+        .reject { background-color: #f44336; color: white; padding: 6px 10px; border: none; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -46,6 +24,7 @@
                 <th>Subject</th>
                 <th>Body</th>
                 <th>Status</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -56,6 +35,18 @@
                 <td>{{ email.subject }}</td>
                 <td>{{ email.body[:300] }}{% if email.body|length > 300 %}...{% endif %}</td>
                 <td>{{ email.status }}</td>
+                <td class="actions">
+                    {% if email.status == 'pending' %}
+                        <form method="post" action="/approve/{{ email.id }}">
+                            <button type="submit" class="approve">Approve</button>
+                        </form>
+                        <form method="post" action="/reject/{{ email.id }}">
+                            <button type="submit" class="reject">Reject</button>
+                        </form>
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
             </tr>
             {% endfor %}
         </tbody>
